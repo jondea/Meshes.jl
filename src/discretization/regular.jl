@@ -129,3 +129,26 @@ function discretize(ball::Ball{2,T},
 
   SimpleMesh(points, connec)
 end
+
+function discretize(annulus::Annulus{2,T},
+                    method::RegularDiscretization) where {T}
+  nx, ny = fitdims(method.sizes, paramdim(annulus))
+
+  # sample points regularly
+  sampler = RegularSampling(nx, ny)
+  points  = collect(sample(annulus, sampler))
+
+  # connect regular samples with quadrangles
+  topo   = GridTopology((nx, ny))
+  connec = collect(elements(topo))
+  for j in 1:ny
+    u = (j  )*nx
+    v = (j-1)*nx + 1
+    w = (j  )*nx + 1
+    z = (j+1)*nx
+    quad = connect((u, v, w, z))
+    push!(connec, quad)
+  end
+
+  SimpleMesh(points, connec)
+end

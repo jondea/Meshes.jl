@@ -87,6 +87,21 @@ function sample(::AbstractRNG, ball::Ball{Dim,T},
   ivec(scale(p, s) for p in points, s in srange)
 end
 
+function sample(::AbstractRNG, annulus::Annulus{Dim,T},
+                method::RegularSampling) where {Dim,T}
+  sz = fitdims(method.sizes, paramdim(annulus))
+
+  rrange = range(inner_radius(annulus), stop=outer_radius(annulus), length=last(sz))
+
+  unit_sphere = Sphere(center(annulus), one(T <: AbstractFloat ? T : Float64))
+
+  points = sample(unit_sphere, RegularSampling(sz[1:Dim-1]))
+
+  scale(p, s) = Point(s * coordinates(p))
+
+  ivec(scale(p, s) for p in points, s in rrange)
+end
+
 function sample(::AbstractRNG, seg::Segment{Dim,T},
                 method::RegularSampling) where {Dim,T}
   sz = fitdims(method.sizes, paramdim(seg))

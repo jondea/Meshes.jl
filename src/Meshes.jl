@@ -156,6 +156,7 @@ export
   ncontrols, degree, Horner, DeCasteljau,
   radius, axis, planes, height, isright, sides,
   measure, diagonal, origin, direction,
+  Annulus,
 
   # polytopes
   Polytope, Polygon, Polyhedron,
